@@ -1,0 +1,37 @@
+html, body, div, span, li, input,em,p,button{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+ body {
+    line-height: 1;
+    font-family: "微软雅黑";
+    font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+li {
+    list-style: none;
+}
+input {
+    -webkit-appearance: none;
+    outline: none;
+    border:0;
+}
+em {
+    font-style: normal
+}
+/*取消chrome下input和textarea的聚焦边框：*/
+input,button,select,textarea{
+    outline:none;
+    border: none}
