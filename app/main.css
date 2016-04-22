@@ -41,6 +41,12 @@ input,button,select,textarea{
 .hidden{
     display:none
 }
+.label{
+    width:80px;
+    height: 40px;
+    border: 1px solid darkseagreen;
+    color: black;
+}
 
 /*  主页面  */
 .mainIndex{
@@ -73,6 +79,18 @@ input,button,select,textarea{
     -webkit-tap-highlight-color:transparent;
     background: #fff;
     color:rgba(0,0,0,.44) ;
+}
+input.mainIndex-re{
+    display: inline-block;
+    width: 60px;
+    height: 40px;
+    margin-left: 10px;
+}
+input.mainIndex-password{
+    display: inline-block;
+    width: 90px;
+    height: 40px;
+    margin-left: 10px;
 }
 /*注册登录模块*/
 .main-sign{
@@ -152,7 +170,6 @@ input,button,select,textarea{
 }
 input.sign-in-submit{
     display: inline-block;
-    transform:translateX(-20PX);
     width: 80px;
     height: 40px;
     text-align: center;

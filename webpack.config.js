@@ -48,13 +48,6 @@ module .exports = {
         hot:true,
         inline:true,
         progress:true
-    /*  ,
-        proxy: {
-            '/api/!*': {
-                target: 'http://z005.kmtongji.com',
-                secure: false
-            }
-        }*/
     }
 };
 

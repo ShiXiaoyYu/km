@@ -8,79 +8,104 @@ class SignIn extends React.Component {
         super();
         this.errorMessage = '';
         this.signData = {};
+        this.signData.isSubmit = 0;//判断是否可以提交数据，正确输入数据+1;
  /*       const dispatch = this.props.dispatch;*/
         console.log(this.props);
     }
 
-    componentDidMount() {
+    validateInput(e) {  ////改变type类型并置空value
+        const getType = e.target.placeholder;
+        if(getType == 'account'||getType == 'nick'){
+            e.target.type = 'text';
+            e.target.value = '';
+            return
+        }
+        e.target.type = 'password';
+        e.target.value = '';
     }
 
-handleInputData(e){ //处理输入数据
-    const dataType = e.target.placeholder;
+
+    handleInputData(e){ //处理输入数据
+
+    const dataType = e.target.placeholder; //
+    const inputDate = e.target.value.trim();//获得输入数据
+    const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+
     if(dataType == 'password'){ //输入密码
+        if(!(e.target.value)){
+            e.target.value = '请正确输入密码';
+            e.target.value = 'text';
+            e.target.color = 'red';
+            e.target.style.borderColor = 'red';
+        }
         const password = e.target.value.trim();
         this.signData.password = password;//储存密码
         return
     }
-    const username = e.target.value.trim();
-    //检测是否重名
-/*    $.ajax({
-        url: 'http://z005.kmtongji.com/api/users',
-        type:'GET',
-        success:function(data){
-            console.log('检测用户是否重名');
-            console.log(data);
-        },
-        error:function(err){
-            console.log(err);
-        }});*/
-    this.signData.username = username;//储存用户名
+
+  //  const username = e.target.value.trim();
+
+    if (!emailReg.test(inputDate)||!(e.target.value)) { //  输入账户 判断1.邮箱格式2.是否为空
+        e.target.value = '请正确输入邮箱';
+        e.target.color = 'red';
+        e.target.style.borderColor = 'red';
+        return
+    }
+
+    e.target.style.borderColor = 'black';
+    this.signData.username = inputDate;//储存用户名
 }
 
     submitData(){//提交数据（用户名 密码）
         console.log('用户名密码');
-        console.log(this.signData.username);
-        console.log(this.signData);
-        const dispatch = this.props.dispatch;
-        //{username:this.signData.username,password:this.signData.password}
-        //{username:'1670145451@qq.com',password:'123'}
+        console.dir(this.signData);
+        const self = this;
+        if( ( this.signData.username)&&(this.signData.password)){
+            const dispatch = this.props.dispatch;
+            $.ajax({
+                url: 'http://z005.kmtongji.com/api/login',
+                type:'POST',
+                data:{username:this.signData.username,password:this.signData.password},
+                xhrFields:{
+                    withCredentials: true
+                },
+                success:function(data){
+                    console.log('登录成功');
+                    console.log(data);
+                    dispatch({ //登录成功 显示主页
+                        type:'LOGIN'
+                    });
+                    $.ajax({
+                        url: 'http://z005.kmtongji.com/api/users',
+                        type:'GET',
+                        xhrFields:{
+                            withCredentials: true
+                        },
+                        success:function(data){
+                            console.log('获取已注册或者已登录用户');
+                            console.log(data);
+                        },
+                        error:function(err){
+                            console.log(err);
+                        }});
 
-        //http://z005.kmtongji.com/api/users/setPassword
-/* ,crossDomain: true, */
-        $.ajax({
-            url: 'http://z005.kmtongji.com/api/login',
-            type:'POST',
-            data:{username:this.signData.username,password:this.signData.password},
-            xhrFields:{
-                withCredentials: true
-            },
-            success:function(data){
-                console.log('登录成功');
-                console.log(data);
-                $.ajax({
-                    url: 'http://z005.kmtongji.com/api/users',
-                    type:'GET',
-                    xhrFields:{
-                        withCredentials: true
-                    },
-                    success:function(data){
-                      //  console.log('获取已注册或者已登录用户');
-                        console.log('重新设置密码');
-                        console.log(data);
-                    },
-                    error:function(err){
-                    //    console.log('退出登录');
-                        console.log('重设密码faile');
-                        console.log(err);
-                    }});
-             dispatch({
-                    type:'LOGIN'
-                })
-            },
-            error:function(err){
-                console.log('登录失败');
-                console.log(err);
-            }});
+                },
+                error:function(err){
+                    console.log('登录失败');
+                    console.log(err);
+               }})}else{ //返回错误信息
+
+            if(!(self.signData.username)){
+                $('.sign-in input').eq(0).val('请输入邮箱');
+                $('.sign-in input').eq(0).css('borderColor','red');
+            }
+            if(!(self.signData.password)){
+                $('.sign-in input').eq(1).val('请输入密码').attr('type','text');
+                $('.sign-in input').eq(1).css('borderColor','red');
+            }
+        }
+
+
     }
 
     render() {
@@ -89,16 +114,22 @@ handleInputData(e){ //处理输入数据
             <div  className={this.props.hide?"hidden":'sign-in'}>
                 <form>
                     <input className="sign-in-account" type="email"  placeholder="account"
+                           onClick = {
+                   this.validateInput.bind(this)
+                   }
                         onBlur = {
                         this.handleInputData.bind(this)
                         }
                         />
                     <input className="sign-in-password" type="password"   placeholder="password"
+                           onClick = {
+                   this.validateInput.bind(this)
+                   }
                            onBlur = {
                         this.handleInputData.bind(this)
                         }
                         />
-                    <input type="button" className="sign-in-submit" value='Sign in'
+                    <input type="button" className="sign-in-submit"  value='Sign in'
                         onClick = {
                         this.submitData.bind(this)
                         }
@@ -108,9 +139,4 @@ handleInputData(e){ //处理输入数据
         )
     }
 }
-
 export default connect(state =>state)(SignIn);
-/*
-*
-*   <input className="sign-in-account" type="text" ref={node => { Account = node }} placeholder="account"/>
-* */

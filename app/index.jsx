@@ -18,11 +18,24 @@ require('!style!css!./reset.css');
 import SignUI from './container/SignUI.jsx';
 import MainIndex from './container/MainIndex.jsx'
 
+let getHide = true;
+function hideOrShow(){
+    if (getHide) {
+        getHide = false;
+        console.log('1');
+        return {isHide: true};
+    } else {
+        getHide = true;
+        console.log('2');
+        return {isHide: false};
+    }
+}
 const handleSign = (state = {isHide:false}, action)=> {
     switch (action.type) {
         case  'LOGIN':
             console.log('触发');
-            return {isHide:true};//触发登录按钮显示
+      //      return {isHide:true};//触发登录按钮显示
+        return  hideOrShow();
         default:
             return state;
     }
