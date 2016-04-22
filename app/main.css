@@ -214,7 +214,6 @@ input.sign-in-submit{
 }
 input.sign-up-submit{
     display: inline-block;
-    transform:translateX(-20PX);
     width: 80px;
     height: 40px;
     text-align: center;
@@ -243,9 +242,7 @@ input.sign-up-current{
 .sign-up-current:hover{
     background-color:aqua;
 }
-.sign-up-submit{
 
-}
 
 
 input.sign-in-submit{

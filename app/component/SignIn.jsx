@@ -24,6 +24,10 @@ class SignIn extends React.Component {
         e.target.value = '';
     }
 
+    init(){
+
+    }
+
 
     handleInputData(e){ //处理输入数据
 
@@ -34,7 +38,7 @@ class SignIn extends React.Component {
     if(dataType == 'password'){ //输入密码
         if(!(e.target.value)){
             e.target.value = '请正确输入密码';
-            e.target.value = 'text';
+            e.target.type = 'text';
             e.target.color = 'red';
             e.target.style.borderColor = 'red';
         }
@@ -48,6 +52,7 @@ class SignIn extends React.Component {
     if (!emailReg.test(inputDate)||!(e.target.value)) { //  输入账户 判断1.邮箱格式2.是否为空
         e.target.value = '请正确输入邮箱';
         e.target.color = 'red';
+        e.target.type = 'text';
         e.target.style.borderColor = 'red';
         return
     }
