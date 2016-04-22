@@ -8,7 +8,6 @@ class SignIn extends React.Component {
         super();
         this.errorMessage = '';
         this.signData = {};
-        this.signData.isSubmit = 0;//判断是否可以提交数据，正确输入数据+1;
  /*       const dispatch = this.props.dispatch;*/
         console.log(this.props);
     }
@@ -77,10 +76,15 @@ class SignIn extends React.Component {
                 success:function(data){
                     console.log('登录成功');
                     console.log(data);
+                    if(data.errno == '-100'){
+                            $('.sign-in input').eq(1).val('账号或者密码错误').attr('type','text');
+                            $('.sign-in input').eq(1).css('borderColor','red');
+                        return
+                    }
                     dispatch({ //登录成功 显示主页
                         type:'LOGIN'
                     });
-                    $.ajax({
+              /*      $.ajax({
                         url: 'http://z005.kmtongji.com/api/users',
                         type:'GET',
                         xhrFields:{
@@ -92,7 +96,7 @@ class SignIn extends React.Component {
                         },
                         error:function(err){
                             console.log(err);
-                        }});
+                        }});*/
 
                 },
                 error:function(err){

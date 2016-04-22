@@ -8,9 +8,7 @@ class SignUp extends React.Component {
         super();
         this.dataArr = {};//存储昵称 用户名等信息（需要传递想后端的信息等）
         this.errMsg = {};
-        this.dataArr.isSubmit = 0;//判断是否可以提交数据，正确输入数据+1;
     }
-
     validateInput(e) {  ////改变type类型并置空value
         const getType = e.target.placeholder;
         if(getType == 'account'||getType == 'nick'){
@@ -21,13 +19,10 @@ class SignUp extends React.Component {
         e.target.type = 'password';
         e.target.value = '';
     }
-
     getInputData(e) { //处理input标签输入数据
         const inputDate = e.target.value.trim();
         const dataType = e.target.placeholder;
         const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-
-
         switch (dataType) {  //判断input标签placeholder 进行输入校验，数据存储等逻辑判断
 
             case 'nick': //昵称
@@ -40,7 +35,6 @@ class SignUp extends React.Component {
                 this.errMsg.isSubmit = true;
                 this.dataArr.nick = inputDate;//存储昵称
                 e.target.style.borderColor = 'black';
-                this.dataArr.isSubmit += 1;//正确输入昵称+1
                 break;
             case 'account': //邮箱输入  检测：邮箱格式 是否为空
 
@@ -57,7 +51,7 @@ class SignUp extends React.Component {
                     return
                 }
 
-                $.ajax({  //后端验证问题 需要session 解决1.沟通 给匿名权限 临时申请一个session 2.后端不判断session
+           /*     $.ajax({  //后端验证问题 需要session 解决1.沟通 给匿名权限 临时申请一个session 2.后端不判断session
                         url: 'http://z005.kmtongji.com/api/users',
                         type: 'GET',
                         success: function (data) {
@@ -70,10 +64,9 @@ class SignUp extends React.Component {
                             console.log(err);
                         }
                     }
-                );
+                );*/
                 e.target.style.borderColor = 'black';
                 this.dataArr.username = inputDate; //存储用户名
-                this.dataArr.isSubmit += 1;//正确输入用户名+1
                 break;
             case 'password': //非空检验
                 if (!(e.target.value)) { //密码为空
@@ -85,7 +78,6 @@ class SignUp extends React.Component {
                 }
                 e.target.style.borderColor = 'black';
                 this.dataArr.password = inputDate; //存储密码
-                this.dataArr.isSubmit += 1;//正确输入用户名+1
                 break;
             case 'password_re': //1.两次密码输入是否一致2.是否为空
                 if (!(e.target.value)) { //为空
@@ -106,7 +98,6 @@ class SignUp extends React.Component {
                 }
                 e.target.style.borderColor = 'black';
                 this.dataArr.password_re = inputDate;
-                this.dataArr.isSubmit += 1;//正确输入用户名+1
                 break;
             default :
                 break;
@@ -127,9 +118,12 @@ class SignUp extends React.Component {
                     data: {username: this.dataArr.username, nick: this.dataArr.nick, password: this.dataArr.password},
                     success: function (data) {
                         console.log(data);
-                        //成功注册并登录   isSubmit = 0；
-                        self.dataArr.isSubmit = 0;//正确输入用户名+1
-
+                        //成功注册并登录 判断是否重复注册
+                        if(data.name == 'UserExistsError'){
+                            $('.sign-up input').eq(1).val('该邮箱已经被注册');
+                            $('.sign-up input').eq(1).css('borderColor', 'red');
+                            return
+                        }
                         dispatch({ //注册并成功登陆后 显示主页
                             type: 'LOGIN'
                         })
@@ -208,7 +202,7 @@ class SignUp extends React.Component {
                           this.submitDate.bind(this)
                           }
                         />
-                    <input placeholder='sign In' className="sign-up-current"/>
+
                 </form>
             </div>
         )
